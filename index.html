@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <script src="http:////code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="http:////code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script>
+    	$(document).ready(function() {
+    		var id = "izie";
+                          
+            $("input[name='rdio']").change(function() {
+                                        console.log("changed");
+            if ($("input[name='rdio']:checked").val() == 'izie')
+                                           id = "izie";
+            else if ($("input[name='rdio']:checked").val() == 'prugio')
+                                           id = "prugio";
+            });
+
+    		
+  			$.init = function() {
+	  			var canvas = document.getElementById("canvas_1");
+	  			canvas.addEventListener( 'touchstart', onTouchStart, false);
+	  			canvas.addEventListener( 'click', onClick, false);
+	    		
+	    		
+	  			var b_context = canvas.getContext("2d");
+	  			b_context.fillRect(0, 0, 480, 640);
+  			}
+  			
+  			function onClick(event){
+  			var x = event.pageX,
+        		y = event.pageY;
+        		var json = '{"ID":"'+id+'","X":'+x+',"Y":'+y+'}';
+        		$.callAjax(json);
+        		var requestUrl = 'http://1.209.21.74:8080/FBVOL_SERVER/Character/Move/' + escape(json);
+//        		alert(requestUrl);
+  			}
+  			
+  			function onTouchStart(e) {
+  				e.preventDefault();
+		    	canvas_x = e.targetTouches[0].pageX;
+		    	canvas_y = e.targetTouches[0].pageY;
+		    		
+		    		//alert("x : "+canvas_x+" y : "+canvas_y);
+		    	var json = '{"ID":"'+id+'","X":'+canvas_x+',"Y":'+canvas_y+'}';
+		    	$.callAjax(json);
+  			}
+  			
+	    	
+	    	$.callAjax = function(JSON) {
+				var requestUrl = 'http://1.209.21.74:8080/FBVOL_SERVER/Character/Move/' + escape(JSON);
+		
+				$.ajax({
+					url:requestUrl,
+					type:'GET',
+					error: function(){
+						alert("Ajax Loading Error");
+					},
+					success: function(data){
+						
+					}
+		
+				});
+			}
+			
+			$.init();
+		});
+    	
+    	
+    </script>
+</head>
+<body>
+
+<canvas width="480" height"640" id="canvas_1" style="border:1px;border-color:black;">
+	Canvas tag do not supported
+</canvas>
+<input type="radio" name="rdio" value="izie"> izie
+    <input type="radio" name="rdio" value="prugio"> prugio
+<script src="lib/jquery.js"></script>
+<script src="js/adapters/memory-adapter.js"></script>
+<script src="js/app.js"></script>
+<script src="js/custom.js"></script>
+
+</body>
+</html>
