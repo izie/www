@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	
+<script>
+
+	$(document).ready(function() {
+		
+		var id = "izie";
+        
+        $("input[name='rdio']").change(function() {
+                                    console.log("changed");
+        if ($("input[name='rdio']:checked").val() == 'izie')
+                                       id = "izie";
+        else if ($("input[name='rdio']:checked").val() == 'prugio')
+                                       id = "prugio";
+        });
+
+		
+        $(document).bind('touchstart', function(e) {
+
+			$("#msg").html("터치가 시작되었어요.");
+			
+			var canvas_x = event.touches[0].pageX;
+			var canvas_y = event.touches[0].pageY;
+
+	    	
+	    	$('#msg').append('<div>' + id + ',' +canvas_x + ',' +
+
+					canvas_y + '</div>');
+
+			e.preventDefault();	//	이벤트취소
+
+		});
+
+		
+        $(document).bind('touchmove', function(e) {
+
+	
+
+			var event = e.originalEvent;
+
+			$('#msg').html('touch 이벤트 중입니다.'); 
+
+
+			var canvas_x = event.touches[0].pageX;
+			var canvas_y = event.touches[0].pageY;
+
+			
+			
+			var json = '{"ID":"'+id+'","X":'+canvas_x+',"Y":'+canvas_y+'}';
+	     	$.callAjax(json);
+	     	$('#msg').append('<div>' + id + ',' +canvas_x + ',' +
+
+					canvas_y + '</div>');
+			event.preventDefault();
+
+		});
+
+		
+        $(document).bind('touchend', function(e) {
+
+			$("#msg").append("<div>터치이벤트가 종료되었어요</div>"); 
+			var canvas_x = event.touches[0].pageX;
+			var canvas_y = event.touches[0].pageY;
+
+	    	
+	    	$('#msg').append('<div>' + id + ',' +canvas_x + ',' +
+
+					canvas_y + '</div>');
+			
+	     	event.preventDefault();
+
+		});
+		
+    	$.callAjax = function(JSON) {
+			var requestUrl = 'http://1.209.21.74:8080/FBVOL_SERVER/Character/Move/' + escape(JSON);
+	
+			$.ajax({
+				url:requestUrl,
+				type:'GET',
+				error: function(){
+					alert("Ajax Loading Error");
+				},
+				success: function(data){
+					
+				}
+	
+			});
+		}
+
+	});
+
+</script>
+
+</head>
+
+<body>
+
+<input type="radio" name="rdio" value="izie"> izieaaaaaaaaaaa
+<input type="radio" name="rdio" value="prugio"> prugiobbb
+
+
+<script src="lib/jquery.js"></script>
+<script src="js/adapters/memory-adapter.js"></script>
+<script src="js/app.js"></script>
+<script src="js/custom.js"></script>
+
+<div id="msg">
+
+</div>
+
+</body>
+
+</html>
+
