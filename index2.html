@@ -13,6 +13,11 @@
 
 	$(document).ready(function() {
 		
+		var start_x;
+		var start_y;
+		var move_x;
+		var move_y;
+		
 		var id = "izie";
         
         $("input[name='rdio']").change(function() {
@@ -28,13 +33,13 @@
 
 			$("#msg").html("터치가 시작되었어요.");
 			
-			var canvas_x = event.touches[0].pageX;
-			var canvas_y = event.touches[0].pageY;
+			start_x = event.touches[0].pageX;
+			start_y = event.touches[0].pageY;
 
 	    	
-	    	$('#msg').append('<div>' + id + ',' +canvas_x + ',' +
+	    	$('#msg').append('<div>' + id + ',' +start_x + ',' +
 
-					canvas_y + '</div>');
+					start_y + '</div>');
 
 			e.preventDefault();	//	이벤트취소
 
@@ -43,23 +48,31 @@
 		
         $(document).bind('touchmove', function(e) {
 
-	
+			//	jQuery 이벤트 객체를 자바스크립트 표준 이벤트 객체로 바꾸기
+
+			//	이유는 jQuery 에서 자바 스크립트
 
 			var event = e.originalEvent;
+			var distinction_x;
+			var distinction_y;
 
 			$('#msg').html('touch 이벤트 중입니다.'); 
 
-
-			var canvas_x = event.touches[0].pageX;
-			var canvas_y = event.touches[0].pageY;
-
+			//	div에 터치한 좌표값 넣기
 			
+			move_x = event.touches[0].pageX;
+			move_y = event.touches[0].pageY;
 			
-			var json = '{"ID":"'+id+'","X":'+canvas_x+',"Y":'+canvas_y+'}';
+			distinction_x = move_x - start_x;
+			distinction_y = move_y - start_y;
+			
+			var json = '{"ID":"'+id+'","X":'+distinction_x+',"Y":'+distinction_y+'}';
 	     	$.callAjax(json);
-	     	$('#msg').append('<div>' + id + ',' +canvas_x + ',' +
+	     	$('#msg').append('<div>' + id + ',' +distinction_x + ',' +
 
-					canvas_y + '</div>');
+	     			distinction_y + '</div>');
+	     	start_x = move_x;
+	     	start_y = move_y;
 			event.preventDefault();
 
 		});
@@ -81,8 +94,10 @@
 		});
 		
     	$.callAjax = function(JSON) {
-			var requestUrl = 'http://1.209.21.74:8080/FBVOL_SERVER/Character/Move/' + escape(JSON);
-	
+			//var requestUrl = 'http://1.209.21.74:8080/FBVOL_SERVER/User/Move/' + escape(JSON);
+			var requestUrl = 'http://192.168.0.26:8080/User/Move/'+escape(JSON);
+			
+		
 			$.ajax({
 				url:requestUrl,
 				type:'GET',
@@ -95,7 +110,8 @@
 	
 			});
 		}
-
+    	
+    	
 	});
 
 </script>
@@ -104,8 +120,8 @@
 
 <body>
 
-<input type="radio" name="rdio" value="izie"> izieaaaaaaaaaaa
-<input type="radio" name="rdio" value="prugio"> prugiobbb
+<input type="radio" name="rdio" value="izie"> izie
+<input type="radio" name="rdio" value="prugio"> prugio
 
 
 <script src="lib/jquery.js"></script>
